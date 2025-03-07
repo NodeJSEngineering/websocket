@@ -18,6 +18,8 @@ const io = socket(server, {
 })
 
 const activeUsers = new Set();
+
+// socket.on('connect', () => {}) // This event is fired by the Socket instance upon connection and reconnection By default, any event emitted while the Socket is not connected will be buffered until reconnection. While useful in most cases (when the reconnection delay is short), it could result in a huge spike of events when the connection is restored. to solve this Offline behavior clear buffer using sendBuffer property socket.sendBuffer = [] then you can receive and sendMessage
 io.on("connection", (socket) => {
   console.log(socket.id, 'socket.id'); // x8WIv7-mJelg7on_ALbx // // server-side Each new connection is assigned a random 20-characters identifier.
   console.log("Made socket connection");
@@ -30,6 +32,8 @@ io.on("connection", (socket) => {
     io.emit("new user", [...activeUsers]);
   });
 
+  // socket.on("disconnect", (reason) => {}) here if the disconnection was initiated by the server, you can reconnect manually here
+// socket.on("connect_error", () => {}) fired when the connection is denied by the server in a middleware function here you can modify the auth attribute
   socket.on("disconnect", () => {
 
     activeUsers.delete(socket.userId);
